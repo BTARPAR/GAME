@@ -118,8 +118,8 @@ const Game = (function () {
     }
 
     if ((countGreen + countRed + DEAD) === noOfCellOnBoard) {
-      const player1 = 'RED: ' + (countRed / noOfCellOnBoard * 100).toFixed(2) + '%'
-      const player2 = 'GREEN: ' + (countGreen / noOfCellOnBoard * 100).toFixed(2) + '%'
+      const player1 = 'CPU: ' + (countRed / noOfCellOnBoard * 100).toFixed(2) + '%'
+      const player2 = 'USER: ' + (countGreen / noOfCellOnBoard * 100).toFixed(2) + '%'
       const winner = countGreen > countRed ? 'USER' : 'CPU'
       const whoWon = `Winner is ${winner}`
       setResult(player1, player2, whoWon)
