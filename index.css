@@ -1,0 +1,28 @@
+:root {
+    --player-1: green;
+    --player-2: red;
+    --dead: gray;
+}
+
+.column {
+    display: flex;
+    width: 100%;
+}
+
+.cell {
+    border: 0.5px solid black;
+    height: 10px;
+    width: 10px;
+}
+
+.cell[color=G] {
+    background-color: var(--player-1);
+}
+
+.cell[color=R] {
+    background-color: var(--player-2);
+}
+
+.cell[color=GRAY] {
+    background-color: var(--dead);
+}

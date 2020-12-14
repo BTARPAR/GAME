@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Slickdeal Test</title>
+    <link rel="stylesheet" href="index.css"/>
+    <style>
+        input {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<div style="display: flex;">
+    <div id="board" class="board"></div>
+    <div style="margin-left: 10px;">
+        <input type="color" id="player1" value="#299E2D">USER</input>
+        <input type="color" id="player2" value="#FF0000">CPU</input>
+        <input type="color" id="dead" value="#000000">Dead</input>
+    </div>
+</div>
+<div id="live-score"></div>
+<div id="result" class="board">
+    <p id="red"></p>
+    <p id="green"></p>
+    <p id="winner"></p>
+</div>
+<button id="reset" disabled>Reset</button>
+<button id="auto" disabled>Play Auto</button>
+<button id="step" disabled>Play Step By Step</button>
+<script src="index.js"></script>
+</body>
+</html>
