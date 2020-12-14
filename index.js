@@ -6,17 +6,17 @@ const Game = (function () {
   let currentPlayer = 'U'
   let countGreen = 0, countRed = 1
   let GREEN = [], RED = [], DEAD = 0,
-    userSelected = 0,
+    userSelected = -1,
     noOfCellOnBoard = table * table,
     robotSelected = Math.floor(Math.random() * noOfCellOnBoard),
     playAuto = false, stepper = false
 
   // private methods
-  function toggleCurrentPlayer () {
+  function toggleCurrentPlayer() {
     currentPlayer = currentPlayer === 'C' ? 'U' : 'C'
   }
 
-  function resetGame () {
+  function resetGame() {
     currentPlayer = 'U'
     countGreen = 0, countRed = 1
     userSelected = 0, noOfCellOnBoard = table * table
@@ -32,7 +32,7 @@ const Game = (function () {
     setResult('', '', '')
   }
 
-  function setResult (CPU, USER, Winner) {
+  function setResult(CPU, USER, Winner) {
     const red = document.getElementById('red')
     red.innerText = CPU
     const green = document.getElementById('green')
@@ -41,15 +41,17 @@ const Game = (function () {
     winner.innerText = Winner
   }
 
-  function updateLiveScore () {
+  function updateLiveScore() {
     document.getElementById('live-score').innerHTML = `CPU: ${countRed} vs USER: ${countGreen}`
   }
 
   const playYourTurn = (coordinate, player1, player2, newBord) => {
-    const playerData = { selections: player1.selectedPlaces, color: player1.color }
-    const opponentData = { selections: player2.selectedPlaces, color: player2.color }
-    const startingIndex = parseInt(parseInt(coordinate / 10) + '0')
-    const lastIndex = startingIndex + table
+    const playerData = {selections: player1.selectedPlaces, color: player1.color}
+    const opponentData = {selections: player2.selectedPlaces, color: player2.color}
+    const cells = document.getElementsByClassName('cell')
+    const cell = cells[coordinate]
+    const startingIndex = parseInt(cell.getAttribute('startIndex'))
+    const lastIndex = parseInt(cell.getAttribute('endIndex'))
     const top = coordinate - table
     const bottom = coordinate + table
     const left = coordinate - 1
@@ -64,7 +66,7 @@ const Game = (function () {
     if (left >= 0 && left < noOfCellOnBoard && left >= startingIndex) {
       placeCoordinatesInPlace(left, newBord, playerData, opponentData)
     }
-    if (right >= 0 && right < noOfCellOnBoard && right < lastIndex) {
+    if (right >= 0 && right < noOfCellOnBoard && right <= lastIndex) {
       placeCoordinatesInPlace(right, newBord, playerData, opponentData)
     }
 
@@ -74,6 +76,7 @@ const Game = (function () {
     const cells = document.getElementsByClassName('cell')
     const cell = cells[coordinate]
     const color = cell.getAttribute('color')
+
     if (color === opponentData.color) {
       cell.setAttribute('color', 'GRAY')
       const index = opponentData.selections.indexOf(coordinate)
@@ -97,20 +100,20 @@ const Game = (function () {
     }
   }
 
-  function startPlayingAuto () {
+  function startPlayingAuto() {
 
     if (currentPlayer === 'C') {
       let redCoordinatesCollector = []
-      const player1 = { selectedPlaces: RED, color: 'R' }
-      const player2 = { selectedPlaces: GREEN, color: 'G' }
+      const player1 = {selectedPlaces: RED, color: 'R'}
+      const player2 = {selectedPlaces: GREEN, color: 'G'}
       RED.map((cell) => {
         playYourTurn(cell, player1, player2, redCoordinatesCollector)
       })
       RED = redCoordinatesCollector
     } else {
       let greenCoordinatesCollector = []
-      const player1 = { selectedPlaces: GREEN, color: 'G' }
-      const player2 = { selectedPlaces: RED, color: 'R' }
+      const player1 = {selectedPlaces: GREEN, color: 'G'}
+      const player2 = {selectedPlaces: RED, color: 'R'}
       GREEN.map((cell) => {
         playYourTurn(cell, player1, player2, greenCoordinatesCollector)
       })
@@ -135,11 +138,12 @@ const Game = (function () {
     updateLiveScore()
   }
 
-  function generateBoard () {
+  function generateBoard() {
     const BOARD = document.getElementById('board')
 
-    let value = 0
+    let value = 0, startIndex = 0
     for (let i = 0; i < table; i++) {
+      if (i !== 0) startIndex += table
       let column = document.createElement('div')
       column.className = 'column'
       for (let j = 0; j < table; j++) {
@@ -152,6 +156,8 @@ const Game = (function () {
           cell.setAttribute('color', 'W')
         }
         cell.setAttribute('value', value)
+        cell.setAttribute('startIndex', startIndex)
+        cell.setAttribute('endIndex', startIndex + table - 1)
         value++
         column.appendChild(cell)
       }
@@ -159,7 +165,7 @@ const Game = (function () {
     }
   }
 
-  function addCellListeners () {
+  function addCellListeners() {
     generateBoard()
     const board = document.getElementsByClassName('board')[0]
 
@@ -167,7 +173,7 @@ const Game = (function () {
       const cell = event.target
       const value = cell.getAttribute('value')
       const color = cell.getAttribute('color')
-      if (userSelected >= 0 && !value && color !== 'W') return
+      if (userSelected !== -1 && !value && color !== 'W') return
       userSelected = parseInt(value)
       cell.setAttribute('color', 'G')
       GREEN.push(userSelected)
@@ -190,7 +196,6 @@ const Game = (function () {
     })
 
     document.getElementById('player1').addEventListener('change', (e) => {
-      console.log(e.target.value)
       document.body.style.setProperty('--player-1', e.target.value)
     })
     document.getElementById('player2').addEventListener('change', (e) => {
