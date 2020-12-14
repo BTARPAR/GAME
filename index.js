@@ -6,7 +6,7 @@ const Game = (function () {
   let currentPlayer = 'U'
   let countGreen = 0, countRed = 1
   let GREEN = [], RED = [], DEAD = 0,
-    userSelected = -1,
+    userSelected = false,
     noOfCellOnBoard = table * table,
     robotSelected = Math.floor(Math.random() * noOfCellOnBoard),
     playAuto = false, stepper = false
@@ -174,10 +174,10 @@ const Game = (function () {
       const cell = event.target
       const value = cell.getAttribute('value')
       const color = cell.getAttribute('color')
-      if (userSelected !== -1 && !value && color !== 'W') return
-      userSelected = parseInt(value)
+      if (userSelected || !value || color !== 'W') return
+      userSelected = true
       cell.setAttribute('color', 'G')
-      GREEN.push(userSelected)
+      GREEN.push(parseInt(value))
       countGreen++
       toggleCurrentPlayer()
       startPlayingAuto()
