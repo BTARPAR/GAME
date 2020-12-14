@@ -2,7 +2,7 @@ const Game = (function () {
   const game = {}
 
   // private variables
-  const table = 10
+  const table = 30
   let currentPlayer = 'U'
   let countGreen = 0, countRed = 1
   let GREEN = [], RED = [], DEAD = 0,
