@@ -25,6 +25,7 @@ const Game = (function () {
     GREEN = [], RED = [], DEAD = 0
 
     const BOARD = document.getElementById('board')
+    document.getElementById('reset').disabled = true
     const SCORECARD = document.getElementById('live-score')
     SCORECARD.innerHTML = ''
     BOARD.innerHTML = ''
